@@ -23,7 +23,7 @@
                            ref="inventory.service.drinkRestService" method="addDrinks"/>
     <int-http:inbound-gateway id="inventory.service.addDrinksGateway"
                               request-channel="inventory.service.addDrinksChannel"
-                              path="/inventory/drink/add"
+                              path="/inventory/drink"
                               supported-methods="POST"/>
 
     <int:channel id="inventory.service.removeDrinksChannel"/>
@@ -31,6 +31,6 @@
                            ref="inventory.service.drinkRestService" method="removeDrinks"/>
     <int-http:inbound-gateway id="inventory.service.removeDrinksGateway"
                               request-channel="inventory.service.removeDrinksChannel"
-                              path="/inventory/drink/remove"
-                              supported-methods="POST"/>
+                              path="/inventory/drink"
+                              supported-methods="DELETE"/>
 </beans>

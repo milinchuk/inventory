@@ -42,15 +42,15 @@
         <int-http:uri-variable name="drinkType" expression="payload"/>
     </int-http:outbound-gateway>
 
-    <int-http:outbound-gateway url="${inventory.url}/inventory/drink/add"
+    <int-http:outbound-gateway url="${inventory.url}/inventory/drink"
                                request-channel="inventory.api.addDrinksChannel"
                                http-method="POST"
                                expected-response-type="inventory.api.dto.Outcome">
     </int-http:outbound-gateway>
 
-    <int-http:outbound-gateway url="${inventory.url}/inventory/drink/remove"
+    <int-http:outbound-gateway url="${inventory.url}/inventory/drink"
                                request-channel="inventory.api.removeDrinksChannel"
-                               http-method="POST"
+                               http-method="DELETE"
                                expected-response-type="inventory.api.dto.Outcome">
     </int-http:outbound-gateway>
 </beans>
