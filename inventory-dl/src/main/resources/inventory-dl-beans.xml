@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder properties-ref="inventory.dl.properties"/>
+    <util:properties id="inventory.dl.properties" location="classpath:inventory-dl.properties"/>
+
+    <bean id="inventory.dl.dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close"
+          p:driverClassName="${database.jdbc.dataSource.driver}"
+          p:url="${database.jdbc.url}"
+          p:username="${database.jdbc.username}"
+          p:password="${database.jdbc.password}"/>
+
+    <bean id="inventory.dl.entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+          p:dataSource-ref="inventory.dl.dataSource"
+          p:packagesToScan="inventory.dl.domain">
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="inventory.dl.transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="inventory.dl.entityManagerFactory"/>
+
+    <bean id="inventory.dl.entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean"
+          p:entityManagerFactory-ref="inventory.dl.entityManagerFactory"/>
+
+    <jpa:repositories base-package="inventory.dl"
+                      entity-manager-factory-ref="inventory.dl.entityManagerFactory"
+                      transaction-manager-ref="inventory.dl.transactionManager"/>
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-http="http://www.springframework.org/schema/integration/http"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+       http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+
+    <import resource="inventory-service-beans.xml"/>
+
+    <int:channel id="inventory.service.drinkCountChannel"/>
+    <int:service-activator input-channel="inventory.service.drinkCountChannel"
+                           ref="inventory.service.drinkRestService" method="getDrinkCount"/>
+    <int-http:inbound-gateway id="inventory.service.drinkCountGateway"
+                              request-channel="inventory.service.drinkCountChannel"
+                              path="/inventory/drink/count/{drinkType}"
+                              payload-expression="#pathVariables.drinkType"
+                              supported-methods="GET"/>
+
+    <int:channel id="inventory.service.addDrinksChannel"/>
+    <int:service-activator input-channel="inventory.service.addDrinksChannel"
+                           ref="inventory.service.drinkRestService" method="addDrinks"/>
+    <int-http:inbound-gateway id="inventory.service.addDrinksGateway"
+                              request-channel="inventory.service.addDrinksChannel"
+                              path="/inventory/drink/add"
+                              supported-methods="POST"/>
+
+    <int:channel id="inventory.service.removeDrinksChannel"/>
+    <int:service-activator input-channel="inventory.service.removeDrinksChannel"
+                           ref="inventory.service.drinkRestService" method="removeDrinks"/>
+    <int-http:inbound-gateway id="inventory.service.removeDrinksGateway"
+                              request-channel="inventory.service.removeDrinksChannel"
+                              path="/inventory/drink/remove"
+                              supported-methods="POST"/>
+</beans>
